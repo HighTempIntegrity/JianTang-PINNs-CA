@@ -3,7 +3,7 @@ import numpy as np
 import torch
 from scipy.interpolate import griddata
 from ImportFile import *
-os.environ['CUDA_VISIBLE_DEVICES'] = '2'
+#os.environ['CUDA_VISIBLE_DEVICES'] = '2'
 
 def goldak_search(Ec,model, t, laser_power, scan_speed, mp_d_exp,mp_w_exp,Tm,absorptivity):
 
@@ -268,27 +268,6 @@ def goldak_search(Ec,model, t, laser_power, scan_speed, mp_d_exp,mp_w_exp,Tm,abs
                 
                 
         print("The optimization goldak parameter a is %f; \n b is %f; \n cr is %f; \n cf is %f.", goldak_ini[0], goldak_ini[1], goldak_ini[2], goldak_ini[3])
-
-        # predict
-        goldak = torch.clamp(goldak_ini, min=Ec.parameters_values[2:6, 0],max=Ec.parameters_values[2:6, 1]) * torch.full(size=(grid_size, 4), fill_value=1.0)
-        inputs = torch.cat([grid_t, grid_mesh, lp, ss, goldak], axis=1).type(torch.FloatTensor)
-        T = model(inputs.to(Ec.device)) * T_norm
-
-        # measure melt pool depth
-        T_hor = torch.relu(T[:hor_size] - Tm) / (T[:hor_size] - Tm + 1e-10)  # For T> Tm, T->1; otherwise T->0
-        mp_w = torch.max(torch.sum(T_hor.reshape(nx, ny), axis=1))  # the melt pool width
-        mp_l = torch.max(torch.sum(T_hor.reshape(nx, ny), axis=0))  # the melt pool length
-
-        # measure melt pool depth
-        T_ver = torch.relu(T[hor_size:] - Tm) / (T[hor_size:] - Tm + 1e-10)  # For T> Tm, T->1; otherwise T->0
-        mp_d = torch.max(torch.sum(T_ver.reshape(nx, nz), axis=1))  # the melt pool depth
-
-        print("The predict melt pool width is %f um; \n depth is %f um; \n length is %f um.",mp_d,mp_w,mp_l)
-        print("The experimental melt pool width is %f um; \n depth is %f um.", mp_d_exp, mp_w_exp)
-
-        plt.plot(np.array(running_loss))
-        plt.show()
-        plt.savefig("./loss.png")
 
 
 def goldak_mc(Ec, model, t, laser_power, scan_speed, mp_d_exp, mp_w_exp, Tm, absorptivity):
