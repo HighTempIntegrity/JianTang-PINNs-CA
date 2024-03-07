@@ -19,12 +19,12 @@ class EquationClass(EquationBaseClass):
         self.parameter_dimensions = 8
         self.parameters_values = torch.tensor([[0.005, 0.02],  # conductivity/1000
                                                [0.002, 0.005],  # density in kg/mm3 *Cp
-                                               [0.09, 0.11],  # Laser Power/1000
-                                               [0.76, 0.80],  # laser speed mm/s/1000
-                                               [0.03, 0.05],  # goldak a width
-                                               [0.05, 0.07],  # goldak b depth
-                                               [0.02, 0.04],  # goldak cf
-                                               [0.11, 0.13]]) # goldak cr
+                                               [0.04, 0.16],  # Laser Power/1000
+                                               [0.4, 1.4],  # laser speed mm/s/1000
+                                               [0.01, 0.1],  # goldak a width
+                                               [0.01, 0.23],  # goldak b depth
+                                               [0.01, 0.1],  # goldak cf
+                                               [0.01, 0.3]]) # goldak cr
         '''self.parameters_values = torch.tensor([[0.005, 0.02],  # conductivity/1000
                                                [0.002, 0.0045],  # density in kg/mm3 *Cp
                                                [0.03, 0.22],  # Laser Power/1000
