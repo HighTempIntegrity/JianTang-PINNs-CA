@@ -3,7 +3,7 @@ import numpy as np
 import torch
 from scipy.interpolate import griddata
 from ImportFile import *
-os.environ['CUDA_VISIBLE_DEVICES'] = '1'
+#os.environ['CUDA_VISIBLE_DEVICES'] = '1'
 
 def goldak_search(Ec,model, t, laser_power, scan_speed, mp_d_exp,mp_w_exp,Tm,absorptivity):
 
@@ -53,7 +53,7 @@ def goldak_search(Ec,model, t, laser_power, scan_speed, mp_d_exp,mp_w_exp,Tm,abs
         lp = lp.to(Ec.device)
         ss = ss.to(Ec.device)
         fc = torch.full(size=(grid_t.shape[0], 1), fill_value=torch.rand(1).item()).to(Ec.device) * \
-             (Ec.parameters_values[4, 1] - Ec.parameters_values[4, 0]) + Ec.parameters_values[4, 0] # free channel
+             (Ec.parameters_values[0, 1] - Ec.parameters_values[0, 0]) + Ec.parameters_values[0, 0] # free channel
 
         mp_w_exp = torch.from_numpy(mp_w_exp).to(Ec.device)
         mp_d_exp = torch.from_numpy(mp_d_exp).to(Ec.device)
@@ -293,9 +293,7 @@ def goldak_search(Ec,model, t, laser_power, scan_speed, mp_d_exp,mp_w_exp,Tm,abs
         print("The predict melt pool width is %f um; \n depth is %f um; \n length is %f um.",mp_d,mp_w,mp_l)
         print("The experimental melt pool width is %f um; \n depth is %f um.", mp_d_exp, mp_w_exp)
 
-        plt.plot(np.array(running_loss))
-        plt.show()
-        plt.savefig("./loss.png")
+
 
 
 def goldak_mc(Ec, model, t, laser_power, scan_speed, mp_d_exp, mp_w_exp, Tm, absorptivity):
