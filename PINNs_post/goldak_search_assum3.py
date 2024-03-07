@@ -3,7 +3,7 @@ import numpy as np
 import torch
 from scipy.interpolate import griddata
 from ImportFile import *
-os.environ['CUDA_VISIBLE_DEVICES'] = '0'
+#os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
 def goldak_search(Ec,model, t, laser_power, scan_speed, mp_d_exp,mp_w_exp,Tm,absorptivity):
 
@@ -53,7 +53,7 @@ def goldak_search(Ec,model, t, laser_power, scan_speed, mp_d_exp,mp_w_exp,Tm,abs
         lp = lp.to(Ec.device)
         ss = ss.to(Ec.device)
         fc = torch.full(size=(grid_t.shape[0], 1), fill_value=torch.rand(1).item()).to(Ec.device) * \
-             (Ec.parameters_values[4, 1] - Ec.parameters_values[4, 0]) + Ec.parameters_values[4, 0] # free channel
+             (Ec.parameters_values[0, 1] - Ec.parameters_values[0, 0]) + Ec.parameters_values[0, 0] # free channel
 
         mp_w_exp = torch.from_numpy(mp_w_exp).to(Ec.device)
         mp_d_exp = torch.from_numpy(mp_d_exp).to(Ec.device)
@@ -87,24 +87,7 @@ def goldak_search(Ec,model, t, laser_power, scan_speed, mp_d_exp,mp_w_exp,Tm,abs
             goldak_ini[2] = np.random.uniform(0.1,0.9)#(0.9,2.0)
             goldak_ini[-1] = np.random.uniform(0.02, 0.18)
             goldak_ini[1] =  0.0275 # np.random.uniform(0.02,0.05)
-            #goldak_ini[3] =  np.random.uniform(0.05,0.10)
-            #goldak_ini[4] =  np.random.uniform(0.1,0.25)
-            
-            #goldak_ini[0] =  np.random.uniform(-0.5,2.0)
-            
 
-            #goldak_ini[0] = np.random.uniform(0.5,1.2)#
-            #goldak_ini[-1] = np.random.uniform(-0.05, 0.05)
-            #goldak_ini[1] = 0.053
-            #goldak_ini[2] = 0.1
-            #goldak_ini[3] = 0.4
-            '''goldak_range[:,0]
-            goldak_ini[-1] = 0.8
-            goldak_ini[1] = 0.18
-            goldak_ini[2] = 0.05
-            goldak_ini[3] = 0.05
-            goldak_ini[4] = 0.2
-            '''
             goldak_ini.requires_grad = True
             opt_goldak = goldak_ini.detach().clone()
 
@@ -280,9 +263,7 @@ def goldak_search(Ec,model, t, laser_power, scan_speed, mp_d_exp,mp_w_exp,Tm,abs
         output_rec = np.concatenate([goldak_rec, mp_d_tot, mp_w_tot, mp_l_tot], axis=1)
         np.savetxt('./inv_sea_rec.txt',output_rec,delimiter=',')
         print("The optimization goldak parameter a is %f; \n b is %f; \n cr is %f; \n cf is %f.", goldak_ini[0], goldak_ini[1], goldak_ini[2], goldak_ini[3])
-        plt.plot(np.array(running_loss))
-        plt.show()
-        plt.savefig("./loss.png")
+
 
 
 
