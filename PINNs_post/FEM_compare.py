@@ -10,7 +10,7 @@ import matplotlib as mpl
 import mpld3
 import os
 #mpl.use('TkAgg') # if want to show interactive plot
-os.environ['CUDA_VISIBLE_DEVICES'] = '2'
+#os.environ['CUDA_VISIBLE_DEVICES'] = '2'
 
 def FEM_compare(Ec,model,laser_power, scan_speed, Tm,absorptivity, FEM_t, FEM_mesh, FEM_temp, goldak_opt, kfa=0.0, rra=0.015, rrb=0.005, plot_com=False):
 
