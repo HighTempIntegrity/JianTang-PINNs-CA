@@ -1,0 +1,25 @@
+Network properties
+	hidden_layers: 8
+	neurons: 32
+	residual_parameter: 500
+	kernel_regularizer: 2
+	regularization_parameter: 0
+	batch_size: 786432.0
+	epochs: 1
+	max_iter: 50000
+	activation: sin
+	optimizer: LBFGS
+
+Training Information
+	restart_folder: network_20230826_073455
+	Nu_train: 262144
+	Nf_train: 524288
+	Nint_train: 0
+	validation_size: 0.0
+	train_time: 3797.6488938331604
+	L2_norm_test: 0
+	rel_L2_norm: 0
+	error_train: 0.046857766807079315
+	error_vars: 2.2870896998483659e-07
+	error_pde: 0.0020812966395169497
+
