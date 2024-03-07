@@ -2,10 +2,10 @@ from ImportFile import *
 
 torch.manual_seed(42)
 os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
-os.environ['CUDA_VISIBLE_DEVICES'] = '2'
+#os.environ['CUDA_VISIBLE_DEVICES'] = '2'
 #################### Pooriya mods # start ###########################
 # Folder to restart
-restart_folder = ['network20230530_023140']
+restart_folder = ['last']
 device_type = 'cuda' # cuda|cpu; if you choose cuda the code will check for gpu availability
 # Assign [] to start training from scratch
 # Assign ['base'] to restart training from Ole's base model
@@ -87,7 +87,7 @@ def initialize_inputs(len_sys_argv):
         validation_size_ = 0.0  # useless
         network_properties_ = {
             "dict_name": "Network properties",
-            "hidden_layers": 10,
+            "hidden_layers": 8,
             "neurons": 24,
             "residual_parameter": 1, # weight of the init+boundary function in Loss function
             "kernel_regularizer": 2,   # what kind of regularization L#
