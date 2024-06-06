@@ -25,27 +25,6 @@ class EquationClass(EquationBaseClass):
                                                [0.01, 0.23],  # goldak b depth
                                                [0.01, 0.1],  # goldak cf
                                                [0.01, 0.3]]) # goldak cr
-        '''self.parameters_values = torch.tensor([[0.005, 0.02],  # conductivity/1000
-                                               [0.002, 0.0045],  # density in kg/mm3 *Cp
-                                               [0.03, 0.22],  # Laser Power/1000
-                                               [0.2, 1.8]])  # laser speed mm/s/1000'''
-                                              # [0.03, 0.08]])  # laser radius
-        '''
-        self.parameters_values = torch.tensor([[0.01, 0.3],  # conductivity/1000
-                                               [0.001, 0.007],  # density in kg/mm3 *Cp
-                                               [0.01, 0.3],  # Laser Power/1000
-                                               [0.09, 2.0],  # laser speed mm/s/1000
-                                               [0.03, 0.2]])  # laser radius'''
-        #close range 10% around setup 17:
-        #       0.0421    0.0041    0.1277    0.1366    0.0658
-        #+10%:  0.04631   0.00451   0.14047   0.15026   0.07238
-        #-10%:  0.03789   0.00369   0.11493   0.12294   0.05922
-
-        '''        self.parameters_values = torch.tensor([[0.03789, 0.04631], #conductivity/1000
-                                               [0.00369, 0.00451], #density in kg/mm3 *Cp
-                                               [0.11493, 0.14047], #Laser Power/1000
-                                               [0.12294, 0.15026], #laser speed mm/s/1000
-                                               [0.05922, 0.07238]]) #laser radius'''
 
         self.extrema_values = torch.tensor([[-0.1, 1],
                                             [-1, 1.8],
@@ -333,24 +312,6 @@ class EquationClass(EquationBaseClass):
         # heat=heat/torch.max(heat)
         return T / self.umax
         
-    '''
-    def source(self, x):
-        sig = 0.05# x[:,8]
-        q = x[:,6]*1000
-        n = 1
-        x_phys = x[:, 1]
-        y_phys = x[:, 2]
-        z_phys = x[:, 3]
-        v = self.vm
-        #v=x[:,7]*1000*self.tmax
-        timestep = -0. + x[:, 0] * v
-        mask = 1 - 1. / (1 + torch.exp((x[:, 0] - 0.03) * 400)) #have a logistic function as ramp in the beginning at t=0
-        heat = 6 * np.sqrt(3) * n * q / (pi * np.sqrt(pi) * sig ** 3) * torch.exp(
-            -3 * ((x_phys - timestep) ** 2 + (y_phys) ** 2 + (z_phys - 0.03) ** 2) / sig ** 2) * mask
-
-        # heat=heat/torch.max(heat)
-        return heat
-    '''
 
     def source(self, x):
         
