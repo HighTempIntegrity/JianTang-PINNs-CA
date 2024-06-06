@@ -5,7 +5,7 @@ os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
 #os.environ['CUDA_VISIBLE_DEVICES'] = '2'
 #################### Pooriya mods # start ###########################
 # Folder to restart
-restart_folder = ['last']
+restart_folder = []
 device_type = 'cuda' # cuda|cpu; if you choose cuda the code will check for gpu availability
 # Assign [] to start training from scratch
 # Assign ['base'] to restart training from Ole's base model
