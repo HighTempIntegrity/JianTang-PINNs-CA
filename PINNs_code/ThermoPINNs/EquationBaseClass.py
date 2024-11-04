@@ -1,12 +1,8 @@
 import torch
-import matplotlib.pyplot as plt
 import numpy as np
-import math
 import matplotlib.colors as mc
 import colorsys
-from scipy.special import legendre
-import sobol_seq
-import itertools
+
 
 
 class EquationBaseClass:

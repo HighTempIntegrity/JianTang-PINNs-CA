@@ -36,7 +36,7 @@ class InitBC:
     def __init__(self):
         pass
 
-    def apply(self, model, x_boundary, u_boundary, n_out, u_pred_var_list, u_train_var_list, space_dim = None, x_boundary_sym=None, boundary=None, vel_wave=None):
+    def apply(self, model, x_boundary, u_boundary, n_out, u_pred_var_list, u_train_var_list, space_dim=None, x_boundary_sym=None, boundary=None, vel_wave=None):
         x_boundary.requires_grad=True
         u_boundary_pred = model(x_boundary)
         grad_u = torch.autograd.grad(u_boundary_pred, x_boundary, grad_outputs=torch.ones_like(u_boundary_pred), create_graph=True)[0]
@@ -71,7 +71,7 @@ class AbsorbingBC:
     def __init__(self):
         pass
 
-    def apply(self, model, x_boundary, u_boundary, n_out, u_pred_var_list, u_train_var_list, space_dim = None, x_boundary_sym=None, boundary=None, vel_wave=None):
+    def apply(self, model, x_boundary, u_boundary, n_out, u_pred_var_list, u_train_var_list, space_dim=None, x_boundary_sym=None, boundary=None, vel_wave=None):
         x_boundary.requires_grad=True
         u_boundary_pred = model(x_boundary)
         grad_u = torch.autograd.grad(u_boundary_pred, x_boundary, grad_outputs=torch.ones_like(u_boundary_pred), create_graph=True)[0]

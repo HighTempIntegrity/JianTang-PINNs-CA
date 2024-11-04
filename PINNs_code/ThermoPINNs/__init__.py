@@ -20,6 +20,7 @@ import random
 from pyDOE import lhs
 import numpy as np
 import sobol_seq
+import torch
 
 import matplotlib
 #matplotlib.use('Agg')
@@ -34,15 +35,23 @@ from matplotlib.ticker import LinearLocator
 from mpl_toolkits.mplot3d import Axes3D
 import seaborn as sns
 import pandas as pd
+from mpl_toolkits.mplot3d import Axes3D
+import matplotlib.pyplot as plt
+import numpy as np
+from pylab import *
 
 from os import listdir
 from os.path import isfile, join
+from genericpath import isdir
+import csv
 
 # from vtk import vtkXMLStructuredGridReader
 # import vtk
 # from vtk.util.numpy_support import vtk_to_numpy
 pi = math.pi
 
+torch.manual_seed(42)
+os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
 
 class bcolors:
     HEADER = '\033[95m'
@@ -55,11 +64,17 @@ class bcolors:
     UNDERLINE = '\033[4m'
 
 # Change to switch between parameterized or simple version
-from Paper_Equation_param import EquationClass
-# Paper_Equation_tempDep
-from FitClass import *
-from ModClass import *
-from DatasetClass import *
+from .config_function import *
+from .EquationBaseClass import EquationBaseClass
+from .ModClass import *
+from .DatasetClass import *
+from .GeneratorPoints import generator_points
+from .SquareDomain import SquareDomain
+from .BoundaryConditions import PeriodicBC, DirichletBC, AbsorbingBC, NeumannBC
+from .Paper_Equation_param import EquationClass
+from .FitClass import *
+from .PINNS import *
+
 
 rc('font', **{'family': 'serif', 'serif': ['Computer Modern']})
 rc('text', usetex=True)
@@ -72,3 +87,5 @@ plt.rc('axes', labelsize=MEDIUM_SIZE)  # fontsize of the x and y labels
 plt.rc('xtick', labelsize=MEDIUM_SIZE)  # fontsize of the tick labels
 plt.rc('ytick', labelsize=MEDIUM_SIZE)  # fontsize of the tick labels
 plt.rc('axes', titlesize=BIGGER_SIZE)  # fontsize of the tick labels
+
+

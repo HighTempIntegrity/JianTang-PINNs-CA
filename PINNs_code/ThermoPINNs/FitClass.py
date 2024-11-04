@@ -1,14 +1,15 @@
 import torch
-import torch.nn as nn
 import numpy as np
 
 
 class CustomLoss(torch.nn.Module):
-
+    '''
+    Compute total loss for training PINNs
+    '''
     def __init__(self):
         super(CustomLoss, self).__init__()
 
-    def forward(self, Ec, network, x_u_train, u_train, x_b_train, u_b_train, x_f_train, dataclass):
+    def forward(self, Ec, network, x_u_train, u_train, x_b_train, u_b_train, x_f_train, training_set_class):
         lambda_residual = network.lambda_residual
         lambda_reg = network.regularization_param
         order_regularizer = network.kernel_regularizer
@@ -32,12 +33,12 @@ class CustomLoss(torch.nn.Module):
         assert not torch.isnan(u_pred_ini_vars).any()
 
         loss_bound = (torch.mean(abs(u_pred_bound_vars - u_train_bound_vars) ** 2))
-        loss_ini   = (torch.mean(abs(u_pred_ini_vars - u_train_ini_vars) ** 2))
+        loss_ini = (torch.mean(abs(u_pred_ini_vars - u_train_ini_vars) ** 2))
 
-        res = Ec.compute_res(network, x_f_train, None).to(Ec.device)
+        res = Ec.compute_res(network, x_f_train).to(Ec.device)
 
         loss_res  =(torch.mean(abs(res) ** 2 ))#+abs(res) ** 4))
-        loss_vars = loss_ini+loss_bound   #(torch.mean(abs(u_pred_tot_vars - u_train_tot_vars) ** 2))
+        loss_vars = loss_ini+loss_bound
         loss_reg  = regularization(network, order_regularizer)
 
         #loss_v = torch.log10(lambda_residual*loss_vars + 2 * loss_res + lambda_reg * loss_reg)
@@ -103,4 +104,55 @@ def regularization(model, p):
     return reg_loss
 
 
+class StandardLoss(torch.nn.Module):
+    def __init__(self):
+        super(StandardLoss, self).__init__()
 
+    def forward(self, Ec, network, x_u_train, u_train):
+        loss_reg = regularization(network, 2)
+        lambda_reg = network.regularization_param
+        u_pred = network(x_u_train)
+        loss = torch.log10(torch.mean((u_train[:, 0] - u_pred[:, 0]) ** 2) + lambda_reg * loss_reg)
+        del u_train, u_pred
+        print(loss)
+        return loss
+
+
+def StandardFit(Ec, model, training_set_class, verbose=False):
+    num_epochs = model.num_epochs
+    optimizer = model.optimizer
+
+    train_losses = list([np.nan, np.nan, np.nan])
+    freq = 4
+
+    model.train()
+    training_initial_internal = training_set_class.data_initial_internal
+    for epoch in range(num_epochs):
+        if verbose and epoch % freq == 0:
+            print("################################ ", epoch, " ################################")
+
+        for step, (x_u_train_, u_train_) in enumerate(training_initial_internal):
+            if verbose and epoch % freq == 0:
+                print("Batch Number:", step)
+
+            if torch.cuda.is_available():
+                x_u_train_ = x_u_train_.cuda()
+                u_train_ = u_train_.cuda()
+
+            def closure():
+                optimizer.zero_grad()
+                loss_f = StandardLoss().forward(Ec, model, x_u_train_, u_train_)
+                loss_f.backward()
+                train_losses[0] = loss_f
+                train_losses[1] = torch.tensor(0.)
+                train_losses[2] = torch.tensor(0.)
+                return loss_f
+            print(step)
+            optimizer.step(closure=closure)
+
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+            del x_u_train_
+            del u_train_
+
+    return train_losses
